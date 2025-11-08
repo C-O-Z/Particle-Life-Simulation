@@ -1,0 +1,30 @@
+particle-life/
+├── core/
+│   ├── SimulationEngine.java
+│   ├── Particle.java
+│   ├── ForceField.java
+│   ├── InteractionMatrix.java
+│   └── SimulationConfig.java
+│
+├── physics/
+│   ├── Vector2D.java
+│   ├── Integrator.java
+│   ├── CollisionHandler.java
+│   └── Boundary.java
+│
+├── ui/
+│   ├── ParticleCanvas.java
+│   ├── ControlsPanel.java
+│   ├── MetricsPanel.java
+│   └── ColorLegend.java
+│
+├── data/
+│   ├── SimulationLogger.java
+│   ├── Snapshot.java
+│   └── CSVExporter.java
+│
+├── config/
+│   ├── sample_config.json
+│   └── ConfigLoader.java
+│
+└── Application.java
