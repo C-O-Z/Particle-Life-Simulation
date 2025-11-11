@@ -4,9 +4,10 @@ public final class Vector2D {
 
     public double x,y;
     public static final Vector2D ZERO = new Vector2D(0,0);
+
     //Constructors
     public Vector2D(){
-        this(0,0);
+        this(Vector2D.ZERO);
     }
 
     public Vector2D(double inX, double inY){
@@ -14,38 +15,36 @@ public final class Vector2D {
         y = inY;
     }
 
+    public Vector2D(Vector2D v){
+        x = v.x;
+        y = v.y;
+    }
+
     //Setter Methods
-    public Vector2D set(double inX, double inY){
+    public void set(double inX, double inY){
         x = inX;
         y = inY;
-        return this;
     }
-    public Vector2D set(Vector2D inVec){
+    public void set(Vector2D inVec){
         x = inVec.x;
         y = inVec.y;
-        return this;
     }
 
     //Vector Operation Methods
     public Vector2D add(Vector2D inVec){
-        x += inVec.x;
-        y += inVec.y;
-        return this;
+        return new Vector2D(x + inVec.x,y + inVec.y);
     }
     public Vector2D subtract(Vector2D inVec){
-        x -= inVec.x;
-        y -= inVec.y;
-        return this;
+        return new Vector2D(x - inVec.x,y - inVec.y);
     }
-    public Vector2D scale(double scale){
-        x *= scale;
-        y *= scale;
-        return this;
+    public Vector2D multiply(double scale){
+        return new Vector2D(x * scale,y * scale);
+    }
+    public Vector2D divide(double scale){
+        return new Vector2D(x / scale,y / scale);
     }
     public Vector2D negate(){
-        x = -x;
-        y = -y;
-        return this;
+        return new Vector2D(-x,-y);
     }
     public double dot(Vector2D inVec){
         return (x * inVec.x) + (y * inVec.y);
@@ -59,11 +58,13 @@ public final class Vector2D {
     public Vector2D normalize(){
         double magnitude = this.magnitude();
         //check for 0 or near 0 magnitudes in order to avoid arithmetic exceptions
+        double newX = 0;
+        double newY = 0;
         if(magnitude > 1e-9){
-            x /= magnitude;
-            y /= magnitude;
+            newX = x / magnitude;
+            newY = y / magnitude;
         }
-        return this;
+        return new Vector2D(newX,newY);
     }
 
     //Copy Method
@@ -74,6 +75,6 @@ public final class Vector2D {
     @Override
     public String toString(){
         //Truncate to three decimal places for readability
-        return String.format("(%.3f, %.3f", x, y);
+        return String.format("(%.3f, %.3f)", x, y);
     }
 }
