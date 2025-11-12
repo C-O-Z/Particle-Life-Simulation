@@ -17,7 +17,7 @@ public class ParticlePanel extends Pane{
     private final AnimationTimer timer;
     private final GraphicsContext gc;
     private final SimulationEngine simEngine;
-    private final long frameInterval = 1_000_000_000L / 60;
+    private final long frameInterval = 28_000_000;
     private long lastTime = 0;
 
 
@@ -33,7 +33,11 @@ public class ParticlePanel extends Pane{
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
+                if(now - lastTime >= frameInterval){
+                    simEngine.tick(frameInterval / 1e9);
+                    render();
+                    lastTime = now;
+                }
 //                if(lastTime == 0){
 //                    lastTime = now;
 //                    return;
@@ -64,5 +68,9 @@ public class ParticlePanel extends Pane{
             gc.setFill(curParticle.color);
             gc.fillOval(curParticle.position.x - Particle.RADIUS, curParticle.position.y - Particle.RADIUS,Particle.RADIUS * 2, Particle.RADIUS * 2);
         }
+    }
+
+    public RelationshipMatrix getMatrix(){
+        return simEngine.getMatrix();
     }
 }

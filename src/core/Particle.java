@@ -4,17 +4,18 @@ import physics.Vector2D;
 import javafx.scene.paint.Color;
 
 public class Particle {
-    //May refactor to include more particle types, 3 is a good start
     public enum Type{
         RED,
         BLUE,
         GREEN,
         CYAN,
         PURPLE,
-        YELLOW
+        YELLOW,
+        ORANGE,
+        LIME
     }
     //could later play with varied radii?
-    public static final double RADIUS = 5;
+    public static final double RADIUS = 2;
     public static final double FRICTION = 0.85;
     public final Type type;
     public final Color color;
@@ -34,7 +35,10 @@ public class Particle {
             case CYAN -> Color.CYAN;
             case PURPLE -> Color.PURPLE;
             case YELLOW -> Color.YELLOW;
+            case ORANGE -> Color.ORANGE;
+            case LIME -> Color.LIME;
         };
+        //all mass of 1 for right now, might play with it later
         mass = switch(type){
             case RED -> 1;
             case BLUE -> 1;
@@ -42,6 +46,8 @@ public class Particle {
             case CYAN -> 1;
             case PURPLE -> 1;
             case YELLOW -> 1;
+            case ORANGE -> 1;
+            case LIME -> 1;
         };
         velocity = new Vector2D(0,0);
         acceleration = new Vector2D(0,0);
@@ -58,8 +64,7 @@ public class Particle {
         velocity = velocity.add(acceleration.multiply(dt));
         position = position.add(velocity.multiply(dt));
         //apply friction, is this the right spot?
-        //velocity = velocity.multiply(FRICTION);
-        //acceleration = Vector2D.ZERO;
+        velocity = velocity.multiply(FRICTION);
         accumForce = Vector2D.ZERO;
         acceleration = Vector2D.ZERO;
     }
