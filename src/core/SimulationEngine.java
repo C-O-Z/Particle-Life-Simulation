@@ -11,7 +11,7 @@ public class SimulationEngine {
     private final double universalScalar = 40;
     private final ArrayList<Particle> particles;
     private final int width,height;
-    private final RelationshipMatrix relationshipMatrix;
+    private RelationshipMatrix relationshipMatrix;
 
     public SimulationEngine(int w, int h, ArrayList<Particle> inParticles, RelationshipMatrix matrix){
         particles = inParticles;
@@ -73,6 +73,7 @@ public class SimulationEngine {
             Boundaries.enforceWrapBoundary(curParticle,width,height);
         }
     }
+
     //map method lifted from here: https://stackoverflow.com/questions/17134839/how-does-the-map-function-in-processing-work
     private double map(double x, double iMin, double iMax, double jMin, double jMax){
         return (x - iMin) / (iMax - iMin) * (jMax - jMin) + jMin;
@@ -84,4 +85,8 @@ public class SimulationEngine {
     public RelationshipMatrix getMatrix (){
         return relationshipMatrix;
     }
+    public void setRelationshipMatrix(RelationshipMatrix newMatrix){
+        relationshipMatrix = newMatrix;
+    }
+
 }

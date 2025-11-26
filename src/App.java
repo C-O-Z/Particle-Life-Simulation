@@ -1,10 +1,12 @@
 import core.Particle;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import physics.RelationshipMatrix;
 import physics.Vector2D;
 import ui.ParticlePanel;
 import ui.RelationshipVisualizer;
@@ -15,8 +17,10 @@ import java.util.Random;
 public class App extends Application {
     private final int WIDTH = 1000;
     private final int HEIGHT = 750;
-    private final int OPTIONS_WIDTH = 300;
+    private final int OPTIONS_WIDTH = 350;
     private ParticlePanel simPanel;
+    private VBox optionsBox;
+    private RelationshipVisualizer relationships;
 
     @Override
     public void start(Stage primaryStage) {
@@ -28,11 +32,21 @@ public class App extends Application {
 
         BorderPane mainPanel = new BorderPane();
 
-        VBox optionsBox = new VBox();
+        optionsBox = new VBox();
         optionsBox.setPrefSize(OPTIONS_WIDTH,HEIGHT);
 
-        RelationshipVisualizer relationships = new RelationshipVisualizer(simPanel.getMatrix(),OPTIONS_WIDTH,300);
+        relationships = new RelationshipVisualizer(simPanel.getMatrix(),OPTIONS_WIDTH,300);
         optionsBox.getChildren().add(relationships);
+
+        Button pauseBtn = new Button("Pause");
+        pauseBtn.setOnAction(event -> simPanel.stop());
+        optionsBox.getChildren().add(pauseBtn);
+        Button startBtn = new Button("Start");
+        startBtn.setOnAction(event -> simPanel.start());
+        optionsBox.getChildren().add(startBtn);
+        Button randomBtn = new Button("Randomize");
+        randomBtn.setOnAction(event -> updateMatrix(new RelationshipMatrix()));
+        optionsBox.getChildren().add(randomBtn);
 
         mainPanel.setLeft(optionsBox);
         mainPanel.setCenter(simPanel);
@@ -44,6 +58,14 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         simPanel.start();
+    }
+
+    private void updateMatrix(RelationshipMatrix matrix){
+        optionsBox.getChildren().remove(relationships);
+        relationships = new RelationshipVisualizer(matrix, OPTIONS_WIDTH,300);
+        optionsBox.getChildren().addFirst(relationships);
+        simPanel.setRelationshipMatrix(matrix);
+
     }
 
     @Override

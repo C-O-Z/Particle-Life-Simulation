@@ -8,8 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import physics.RelationshipMatrix;
 
-import java.util.Stack;
-
 public class RelationshipVisualizer extends GridPane {
     private final RelationshipMatrix matrix;
     private final int width,height;
@@ -20,34 +18,42 @@ public class RelationshipVisualizer extends GridPane {
         height = h;
         this.setPrefSize(width,height);
         //populate rows and columns with colored squares representing force values between pairs
-        for(int i = 0; i < Particle.Type.values().length; i++){
-            this.add(makeLabelBox(Particle.Type.values()[i]),0,i);
-            for(int j = 0; j < Particle.Type.values().length;j++){
-                if(j == 0){
-                    this.add(makeLabelBox(Particle.Type.values()[i]),i,j);
-                    continue;
-                }
-                this.add(makeRelationShipBox(Particle.Type.values()[i],Particle.Type.values()[j]),i,j);
+        Rectangle rect = new Rectangle((double)width/Particle.Type.values().length+1,(double)height/Particle.Type.values().length+1);
+        Color boxColor = Color.BLACK;
+        rect.setFill(boxColor);
+        this.add(rect,0,0);
+        for(int c = 0; c < Particle.Type.values().length; c++){
+            this.add(makeLabelBox(Particle.Type.values()[c]),c+1,0);
+            this.add(makeLabelBox(Particle.Type.values()[c]),0,c+1);
+            for(int r = 0; r < Particle.Type.values().length;r++){
+                this.add(makeRelationShipBox(Particle.Type.values()[c],Particle.Type.values()[r]),c+1,r+1);
             }
         }
     }
 
     private StackPane makeRelationShipBox(Particle.Type t1, Particle.Type t2){
         StackPane rBox = new StackPane();
-        //rBox.setPrefSize(width,height);
+        Rectangle bRect = new Rectangle((double)width/Particle.Type.values().length+1,(double)height/Particle.Type.values().length+1);
+        bRect.setFill(Color.BLACK);
         Rectangle rect = new Rectangle((double)width/Particle.Type.values().length+1,(double)height/Particle.Type.values().length+1);
-        double transparencyValue = map(matrix.getForceBetween(t1,t2),-1,1,0,1);
-        Color relationshipColor;
+        double transparencyValue = 0;
+        double transparencyMin = 0.3;
         if(matrix.getForceBetween(t1,t2) < 0){
+            transparencyValue = map(matrix.getForceBetween(t1,t2),-1,-0.3, 1,transparencyMin);
+        }else{
+            transparencyValue = map(matrix.getForceBetween(t1,t2),0.3,1,transparencyMin, 1);
+        }
+        Color relationshipColor;
+        if(matrix.getForceBetween(t1,t2) < -0.3){
             relationshipColor = new Color(1,0,0,transparencyValue);
-        }else if(matrix.getForceBetween(t1,t2) > 0){
+        }else if(matrix.getForceBetween(t1,t2) > 0.3){
             relationshipColor = new Color(0,1,0,transparencyValue);
         }else{
-            relationshipColor = new Color(0,0,0,0);
+            relationshipColor = new Color(1,1,1,0);
         }
         rect.setFill(relationshipColor);
         Label rValue = new Label(String.format("%.2f",matrix.getForceBetween(t1,t2)));
-        rBox.getChildren().addAll(rect,rValue);
+        rBox.getChildren().addAll(bRect,rect,rValue);
         return rBox;
     }
     private StackPane makeLabelBox(Particle.Type t){

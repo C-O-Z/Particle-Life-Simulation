@@ -33,20 +33,12 @@ public class ParticlePanel extends Pane{
         timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                //update everything with a fixed timestep to avoid jank timing issues
                 if(now - lastTime >= frameInterval){
                     simEngine.tick(frameInterval / 1e9);
                     render();
                     lastTime = now;
                 }
-//                if(lastTime == 0){
-//                    lastTime = now;
-//                    return;
-//                }
-//                //Potential to refactor to fixed timestep if needed for accuracy/performance
-//                double  dt = (now - lastTime) / 1e9;
-//                simEngine.tick(dt);
-//                render();
-//                lastTime = now;
             }
         };
     }
@@ -56,6 +48,9 @@ public class ParticlePanel extends Pane{
     }
     public void stop(){
         timer.stop();
+    }
+    public void setRelationshipMatrix(RelationshipMatrix matrix){
+        simEngine.setRelationshipMatrix(matrix);
     }
 
     private void render(){
